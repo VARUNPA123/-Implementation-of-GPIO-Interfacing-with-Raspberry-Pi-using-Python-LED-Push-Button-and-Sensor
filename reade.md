@@ -1,180 +1,113 @@
-# EXP 2(E) GPIO INTERFACING WITH RASPBERRY PI PICO USING MICROPYTHON – LED, PUSH BUTTON, AND SENSOR
+# IMPLEMENTATION OF GPIO INTERFACING WITH RASPBERRY PI USING PYTHON – LED, PUSH BUTTON AND SENSOR
 
 ## Aim
 
-To interface an LED, push button, and digital sensor with the GPIO pins of a Raspberry Pi Pico and control and monitor the connected devices using MicroPython in the Wokwi simulation environment.
-
----
+To interface an LED, push button, and analog sensor with Raspberry Pi using Python and observe their operation through GPIO and ADC.
 
 # Hardware / Software Tools Required
 
-* Raspberry Pi Pico
-* LED
-* 220Ω / 330Ω Resistor
-* Push Button
-* Digital Sensor such as PIR / IR Sensor
-* Breadboard
-* Jumper Wires
-* Wokwi Online Simulator
-* MicroPython
-
----
+- Raspberry Pi Pico
+- LED
+- Push Button
+- Analog Sensor
+- Resistor
+- Breadboard
+- Jumper Wires
+- USB Cable
+- Wokwi Simulator
+- MicroPython
 
 # Circuit Diagram
 
----
+<img width="876" height="543" alt="Screenshot 2026-09-08 131711" src="https://github.com/user-attachments/assets/1943fb75-e670-472b-ac00-1be2e2c8af15" />
 
-**To upload Wokwi circuit diagram**
-
----
-
-# GPIO Connections
-
-| Component                  | Raspberry Pi Pico Pin      | GPIO    |
-| -------------------------- | -------------------------- | ------- |
-| LED Anode                  | GP15 through 220Ω resistor | GPIO 15 |
-| LED Cathode                | GND                        | —       |
-| Push Button                | GP14                       | GPIO 14 |
-| Push Button other terminal | GND                        | —       |
-| Sensor VCC                 | 3.3V                       | —       |
-| Sensor GND                 | GND                        | —       |
-| Sensor OUT                 | GP13                       | GPIO 13 |
-
-> **Note:** The GPIO pin numbers can be changed according to the Wokwi circuit configuration.
-
----
 
 # Procedure
 
-## Step 1: Create the Wokwi Project
+## Step 1: Create the Circuit
 
-1. Open the **Wokwi online simulator**.
-2. Create a new project using **Raspberry Pi Pico**.
-3. Select **MicroPython** as the programming environment.
-4. Add the following components:
+1. Open the Wokwi online simulator.
+2. Add the Raspberry Pi Pico board.
+3. Connect the LED to GPIO 15.
+4. Connect the push button to GPIO 16.
+5. Connect the analog sensor to ADC GPIO 28.
+6. Connect the required power and GND connections.
+7. Verify all circuit connections.
 
-   * Raspberry Pi Pico
-   * LED
-   * Resistor
-   * Push Button
-   * Digital Sensor
-5. Place the components on the virtual breadboard.
+## Step 2: Configure the GPIO Pins
 
-## Step 2: Connect the LED
+1. Configure GPIO 15 as an output for the LED.
+2. Configure GPIO 16 as an input for the push button.
+3. Configure GPIO 28 as an ADC input for the analog sensor.
+4. Initially turn the LED OFF.
 
-1. Connect GPIO 15 (GP15) of the Raspberry Pi Pico to a 220Ω resistor.
-2. Connect the resistor to the anode of the LED.
-3. Connect the cathode of the LED to GND.
-4. The LED will be controlled through GPIO 15.
-
-## Step 3: Connect the Push Button
-
-1. Connect one terminal of the push button to GPIO 14 (GP14).
-2. Connect the other terminal of the push button to GND.
-3. Configure GPIO 14 as an input with an internal pull-up resistor.
-4. When the button is pressed, the input will read LOW.
-
-## Step 4: Connect the Sensor
-
-1. Connect the sensor VCC to the appropriate supply voltage.
-2. Connect the sensor GND to GND.
-3. Connect the sensor OUT pin to GPIO 13 (GP13).
-4. Configure GPIO 13 as a digital input.
-5. The sensor output will be read by the Raspberry Pi Pico.
-
-> **Note:** The sensor used in the experiment should provide a compatible digital output. If an analog sensor is used, an external ADC is required for analog-to-digital conversion.
-
-## Step 5: Write the MicroPython Program
+## Step 3: Write and Run the Program
 
 1. Open the MicroPython editor in Wokwi.
-2. Import the required `Pin` and `time` modules.
-3. Define the GPIO pins for the LED, push button, and sensor.
-4. Configure the LED as an output.
-5. Configure the push button and sensor as inputs.
-6. Read the state of the push button and sensor continuously.
-7. Turn ON the LED when the push button is pressed or the sensor detects an object.
-8. Turn OFF the LED when neither condition is active.
-9. Display the input and output states in the Wokwi Serial Monitor.
+2. Enter the Python program.
+3. Configure the LED, push button, and ADC pins.
+4. Run the program.
+5. Continuously monitor the push button and analog sensor values.
 
-## Step 6: Run the Simulation
+## Step 4: Control the LED
+
+1. Press the push button.
+2. When the button is pressed, the LED turns ON.
+3. Release the push button.
+4. When the button is released, the LED turns OFF.
+5. The LED operation is continuously controlled according to the button state.
+
+## Step 5: Read the Analog Sensor
+
+1. The analog sensor value is continuously read using the ADC.
+2. The ADC value is displayed in the output console.
+3. The ADC value is converted into voltage.
+4. The corresponding voltage value is displayed in the output console.
+
+## Step 6: Observe the Output
 
 1. Start the Wokwi simulation.
-2. Observe the initial state of the LED.
-3. Press the virtual push button.
-4. Observe that the LED turns ON.
-5. Release the push button.
-6. Activate the sensor.
-7. Observe that the LED turns ON when the sensor detects an object.
-8. Deactivate the sensor.
-9. Observe that the LED turns OFF when both inputs are inactive.
-10. Check the Serial Monitor for the GPIO states.
-
-## Step 7: Verify the Output
-
-1. Verify that the Raspberry Pi Pico starts the MicroPython program successfully.
-2. Verify the push button input.
-3. Verify the sensor input.
-4. Verify that the LED responds to the input conditions.
-5. Check the corresponding messages displayed in the Serial Monitor.
-6. Record the observed input and output states.
-
----
+2. Press the push button and observe the LED.
+3. Release the push button and observe the LED.
+4. Observe the analog sensor value in the console.
+5. Observe the calculated voltage value.
+6. Repeat the operation for different sensor values.
 
 # Program
 
-```python
-from machine import Pin
-import time
+```
+from machine import Pin, ADC
+from time import sleep
 
-# GPIO pin configuration
-LED_PIN = 15
-BUTTON_PIN = 14
-SENSOR_PIN = 13
+LED = Pin(15, Pin.OUT)
+BUTTON = Pin(16, Pin.IN)
+adc = ADC(Pin(28))
 
-# Configure GPIO pins
-led = Pin(LED_PIN, Pin.OUT)
-button = Pin(BUTTON_PIN, Pin.IN, Pin.PULL_UP)
-sensor = Pin(SENSOR_PIN, Pin.IN)
+LED.off()
 
-print("Raspberry Pi Pico GPIO Interface Started")
-print("LED: GP15 | Button: GP14 | Sensor: GP13")
+while True:
+    if BUTTON.value() == 1:
+        print("Button pressed, LED toggle")
+        LED.on()
+    else:
+        LED.off()
 
-try:
-    while True:
+    analog_value = adc.read_u16()
+    print(f"Analog value: {analog_value}")
 
-        # Read push button and sensor
-        button_state = button.value()
-        sensor_state = sensor.value()
+    voltage = analog_value * (3.3 / 65535)
+    print(f"Voltage: {voltage}")
 
-        # Display input states
-        print("Button =", button_state,
-              "| Sensor =", sensor_state)
-
-        # Control LED
-        if button_state == 0 or sensor_state == 1:
-            led.value(1)
-            print("LED = ON")
-        else:
-            led.value(0)
-            print("LED = OFF")
-
-        time.sleep(0.5)
-
-except KeyboardInterrupt:
-    led.value(0)
-    print("Program stopped")
+    print("==========")
+    sleep(0.1)
 ```
 
-> **Note:** The program uses MicroPython and the `machine.Pin` class for GPIO interfacing. The push button uses an internal pull-up resistor, so its state is **LOW (0) when pressed**. The sensor is assumed to provide a digital output, where **HIGH (1) indicates detection**.
+# OUTPUT
 
----
-
-# Observation
+<img width="1920" height="1080" alt="Screenshot 2026-09-08 131631" src="https://github.com/user-attachments/assets/16e98c15-12b4-4cf4-ae1e-1612917ecc48" />
 
 
 
----
-
-# Result
-
-The **GPIO interfacing of an LED, push button, and digital sensor with the Raspberry Pi Pico was successfully implemented using MicroPython in the Wokwi simulation environment**. The experiment demonstrated the configuration of GPIO pins as digital inputs and outputs, reading input signals from the push button and sensor, and controlling the LED based on the input conditions.
+# RESULT
+The GPIO interfacing of an LED, push button, and analog sensor with Raspberry Pi Pico was successfully implemented using MicroPython. 
+The LED was controlled using the push button, and the analog sensor value was read using the ADC and converted into the corresponding voltage.
